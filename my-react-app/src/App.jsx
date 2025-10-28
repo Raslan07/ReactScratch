@@ -1,89 +1,66 @@
 import { useState } from "react";
 
-const messages = [
-  "Learn React ⚛️",
-  "Apply for jobs 💼",
-  "Invest your new income 🤑",
-];
 
 export default function App() {
   return (
     <div>
-      <Steps />
+      <Counter/>
     </div>
   );
 }
 
-function Steps() {
-  const [step, setStep] = useState(1);
-  const [isOpen, setIsOpen] = useState(true);
+function Counter(){
+  const [_step , _setStep] = useState(1)
+  const [_count , _setCount] = useState(0)
 
-  function handlePrevious() {
-    if (step > 1) setStep((s) => s - 1);
+  const date = new Date();
+  date.setDate(date.getDate() + _count);
+
+console.log(date.toDateString())
+  function incremntVal(){
+    return _setStep(()=>_step+1) ;
   }
-
-  function handleNext() {
-    if (step < 3) {
-      setStep((s) => s + 1);
-    }
-
+  function decremntVal() {
+    return _setStep(() => _step - 1);
   }
-
+  function incremntVal2() {
+    return _setCount(() => _count + _step);
+  }
+  function decremntVal2() {
+    return _setCount(() => _count - _step);
+  }
   return (
-    <div>
-      <button className="close" onClick={() => setIsOpen((is) => !is)}>
-        &times;
-      </button>
+    <div className="container">
+      <div className="step">
+        <button onClick={decremntVal} type="button">
+          -
+        </button>
+        <p>Step : {_step} </p>
+        <button onClick={incremntVal} type="button">
+          +
+        </button>
+      </div>
+      
+      <div className="count">
+        <button onClick={decremntVal2} type="button">
+          -
+        </button>
+        <p>Count : {_count} </p>
+        <button onClick={incremntVal2} type="button">
+          +
+        </button>
+      </div>
 
-      {isOpen && (
-        <div className="steps">
-          <div className="numbers">
-            <div className={step >= 1 ? "active" : ""}>1</div>
-            <div className={step >= 2 ? "active" : ""}>2</div>
-            <div className={step >= 3 ? "active" : ""}>3</div>
-          </div>
-
-          <p className="message">
-            Step {step}: {messages[step - 1]}
-          </p>
-
-          <div className="buttons">
-            {step === 1 ? (
-              <button
-                disabled
-                style={{ backgroundColor: "#7950f2", color: "#fff" }}
-                onClick={handlePrevious}
-              >
-                Previous
-              </button>
-            ) : (
-              <button
-                style={{ backgroundColor: "#7950f2", color: "#fff" }}
-                onClick={handlePrevious}
-              >
-                Previous
-              </button>
-            )}
-
-            {step === 3 ? (
-              <button
-                disabled
-                style={{ backgroundColor: "#7950f2", color: "#fff" }}
-                onClick={handleNext}
-              >
-                Next
-              </button>
-            ) : (
-              <button
-                style={{ backgroundColor: "#7950f2", color: "#fff" }}
-                onClick={handleNext}
-              >
-                Next
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+      <p>
+        <span>
+          {_count === 0
+            ? "Today is "
+            : _count > 0
+            ? `${_count} days from today is `
+            : `${Math.abs(_count)} days ago was `}
+        </span>
+        <span>{date.toDateString()}</span>
+      </p>
     </div>
   );
 }
