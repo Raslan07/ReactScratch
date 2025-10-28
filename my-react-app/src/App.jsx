@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const _messages = [
+const messages = [
   "Learn React ⚛️",
   "Apply for jobs 💼",
   "Invest your new income 🤑",
@@ -16,44 +16,74 @@ export default function App() {
 
 function Steps() {
   const [step, setStep] = useState(1);
+  const [isOpen, setIsOpen] = useState(true);
 
-  function handlerPre() {
+  function handlePrevious() {
     if (step > 1) setStep((s) => s - 1);
   }
-  function handlerNext() {
+
+  function handleNext() {
     if (step < 3) {
       setStep((s) => s + 1);
     }
-  }
-  function IsApper() {}
-  return (
-    <div className="parent">
-      <div className="step">
-        <div className="Numbers">
-          <div className={step >= 1 ? "active" : ""}>1</div>
-          {/*Active class to makle the number colored*/}
-          <div className={step >= 2 ? "active" : ""}>2</div>
-          <div className={step >= 3 ? "active" : ""}>3</div>
-        </div>
-        <p className="message">
-          Step {step}: {_messages[step - 1]}
-        </p>
 
-        <div className="buttons">
-          <button
-            style={{ backgroundColor: "#7950f2", color: "#fff" }}
-            onClick={handlerPre}
-          >
-            Pervious
-          </button>
-          <button
-            style={{ backgroundColor: "#7950f2", color: "#fff" }}
-            onClick={handlerNext}
-          >
-            Next
-          </button>
+  }
+
+  return (
+    <div>
+      <button className="close" onClick={() => setIsOpen((is) => !is)}>
+        &times;
+      </button>
+
+      {isOpen && (
+        <div className="steps">
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 3 ? "active" : ""}>3</div>
+          </div>
+
+          <p className="message">
+            Step {step}: {messages[step - 1]}
+          </p>
+
+          <div className="buttons">
+            {step === 1 ? (
+              <button
+                disabled
+                style={{ backgroundColor: "#7950f2", color: "#fff" }}
+                onClick={handlePrevious}
+              >
+                Previous
+              </button>
+            ) : (
+              <button
+                style={{ backgroundColor: "#7950f2", color: "#fff" }}
+                onClick={handlePrevious}
+              >
+                Previous
+              </button>
+            )}
+
+            {step === 3 ? (
+              <button
+                disabled
+                style={{ backgroundColor: "#7950f2", color: "#fff" }}
+                onClick={handleNext}
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                style={{ backgroundColor: "#7950f2", color: "#fff" }}
+                onClick={handleNext}
+              >
+                Next
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
