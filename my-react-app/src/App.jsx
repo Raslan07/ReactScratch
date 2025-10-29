@@ -1,66 +1,67 @@
 import { useState } from "react";
 
+const questions = [
+  {
+    id: 3457,
+    question: "What language is React based on?",
+    answer: "JavaScript",
+  },
+  {
+    id: 7336,
+    question: "What are the building blocks of React apps?",
+    answer: "Components",
+  },
+  {
+    id: 8832,
+    question: "What's the name of the syntax we use to describe a UI in React?",
+    answer: "JSX",
+  },
+  {
+    id: 1297,
+    question: "How to pass data from parent to child components?",
+    answer: "Props",
+  },
+  {
+    id: 9103,
+    question: "How to give components memory?",
+    answer: "useState hook",
+  },
+  {
+    id: 2002,
+    question:
+      "What do we call an input element that is completely synchronised with state?",
+    answer: "Controlled element",
+  },
+];
 
 export default function App() {
   return (
-    <div>
-      <Counter/>
-    </div>
-  );
+    <div className="app">
+      <FlashCards />
+  </div>
+);
 }
 
-function Counter(){
-  const [_step , _setStep] = useState(1)
-  const [_count , _setCount] = useState(0)
+function FlashCards() {
+  const [selectedId, setSelectedId] = useState(null);
 
-  const date = new Date();
-  date.setDate(date.getDate() + _count);
+  function handleClick(id) {
+    setSelectedId(id !== selectedId ? id : null);
+  }
 
-console.log(date.toDateString())
-  function incremntVal(){
-    return _setStep(()=>_step+1) ;
-  }
-  function decremntVal() {
-    return _setStep(() => _step - 1);
-  }
-  function incremntVal2() {
-    return _setCount(() => _count + _step);
-  }
-  function decremntVal2() {
-    return _setCount(() => _count - _step);
-  }
   return (
-    <div className="container">
-      <div className="step">
-        <button onClick={decremntVal} type="button">
-          -
-        </button>
-        <p>Step : {_step} </p>
-        <button onClick={incremntVal} type="button">
-          +
-        </button>
-      </div>
-      
-      <div className="count">
-        <button onClick={decremntVal2} type="button">
-          -
-        </button>
-        <p>Count : {_count} </p>
-        <button onClick={incremntVal2} type="button">
-          +
-        </button>
-      </div>
-
-      <p>
-        <span>
-          {_count === 0
-            ? "Today is "
-            : _count > 0
-            ? `${_count} days from today is `
-            : `${Math.abs(_count)} days ago was `}
-        </span>
-        <span>{date.toDateString()}</span>
-      </p>
+    <div className="flashcards">
+      {questions.map((question) => (
+        <div
+          key={question.id}
+          onClick={() => handleClick(question.id)}
+          className={question.id === selectedId ? "selected" : ""}
+        >
+          <p>
+            {question.id === selectedId ? question.answer : question.question}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
