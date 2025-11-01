@@ -1,78 +1,89 @@
-import { useState } from "react";
-import "./styles.css";
+import { _useState, useState } from "react";
+import "./index.css";
 
-const faqs = [
-  {
-    title: "Where are these chairs assembled?",
-    text: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium, quaerat temporibus quas dolore provident nisi ut aliquid ratione beatae sequi aspernatur veniam repellendus.",
-  },
-  {
-    title: "How long do I have to return my chair?",
-    text: "Pariatur recusandae dignissimos fuga voluptas unde optio nesciunt commodi beatae, explicabo natus.",
-  },
-  {
-    title: "Do you ship to countries outside the EU?",
-    text: "Excepturi velit laborum, perspiciatis nemo perferendis reiciendis aliquam possimus dolor sed! Dolore laborum ducimus veritatis facere molestias!",
-  },
-];
 
 export default function App() {
+return <div>
+        <Tip/> 
+</div>;
+}
+
+
+function Tip(){
+  const [bill , setBill] = useState(''); // Bill what i will pay
+  const [percent1 , setPercent1] = useState(0); // Percentage what i will let it 
+  const [percent2 , setPercent2] = useState(0); // Percentage what myFriend leave
+  const tip = bill * ((percent1 + percent2) / 2 / 100); // Average of my Tip and my friend
+  
+  // Reset Handel Function to Reset all in Zero start
+  function handleReset() {
+    setBill("");
+    setPercent1(0);
+    setPercent2(0);
+  }
+  
   return (
     <div>
-      <Accordion data={faqs} />
+      {/* Bill input field with first useState Bill */}
+      <Billinput billes={bill} onSetBill={setBill} />
+
+      {/* Component with Children Prop Percentage 1 */}
+      <SelectPercent percentage={percent1} onPer={setPercent1}>
+        How did you like the service?
+      </SelectPercent>
+
+      {/* Component with Children Prop Percentage 2 */}
+      <SelectPercent percentage={percent2} onPer={setPercent2}>
+        How did your friend like the service?
+      </SelectPercent>
+
+      {bill > 0 && (
+        <>
+          <Output bill={bill} tip={tip} />
+          <Reset onReset={handleReset} />
+        </>
+      )}
+    </div>
+  );
+}
+//  Component Billinput with useState -> props to set Date with DataFlow
+function Billinput({ billes, onSetBill }) {
+  return (
+    <div>
+      <label htmlFor="">How much was the bill?</label>
+      <input 
+      type="text" 
+      placeholder="Bill Value" 
+      value={billes}
+      onChange={(e)=>onSetBill(Number((e.target.value)))} />
     </div>
   );
 }
 
-function Accordion({ data }) {
-  const [curOpen, setCurOpen] = useState(null);
-
+//  Component Select with useState -> props to set Date with DataFlow
+//  prop its take 4 values of useState one and two for percentage
+function SelectPercent({ children, percentage, onPer }) {
   return (
-    <div className="accordion">
-      {data.map((el, i) => (
-        <AccordionItem
-          curOpen={curOpen}
-          onOpen={setCurOpen}
-          title={el.title}
-          num={i}
-          key={el.title}
-        >
-          {el.text}
-        </AccordionItem>
-      ))}
-
-      <AccordionItem
-        curOpen={curOpen}
-        onOpen={setCurOpen}
-        title="Test 1"
-        num={22}
-        key="test 1"
-      >
-        <p>Allows React developers to:</p>
-        <ul>
-          <li>Break up UI into components</li>
-          <li>Make components reusuable</li>
-          <li>Place state efficiently</li>
-        </ul>
-      </AccordionItem>
+    <div>
+      <label>{children}</label>
+      <select value={percentage} onChange={(e)=>onPer(Number(e.target.value))}>
+        <option value="0">Dissatisfied (0%)</option>
+        <option value="5">it was okay (5%)</option>
+        <option value="10">it was good (10%)</option>
+        <option value="20">Absolutely amazing (20%)</option>
+      </select>
     </div>
   );
 }
 
-function AccordionItem({ num, title, curOpen, onOpen, children }) {
-  const isOpen = num === curOpen;
-
-  function handleToggle() {
-    onOpen(isOpen ? null : num);
-  }
-
+function Output({ bill, tip }) {
   return (
-    <div className={`item ${isOpen ? "open" : ""}`} onClick={handleToggle}>
-      <p className="number">{num < 9 ? `0${num + 1}` : num + 1}</p>
-      <p className="title">{title}</p>
-      <p className="icon">{isOpen ? "-" : "+"}</p>
-
-      {isOpen && <div className="content-box">{children}</div>}
-    </div>
+    <h3>
+      You pay ${bill + tip} (${bill} + ${tip} tip)
+    </h3>
   );
+}
+
+function Reset({ onReset }) {
+  return <button onClick={onReset}>Reset</button>;
 }
